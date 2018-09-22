@@ -1,18 +1,26 @@
 pragma solidity ^0.4.24;
 
-import "./Ownable.sol";
-
-contract Identity is Ownable {
+contract Identity {
     
     string private name;
     string private cui;
     string private bornDate;
     mapping(address => bool) private authorizedAccounts;
+    address private owner;
+
+    event identityCreatedEvent();
+
+    modifier onlyOwner {
+        require(msg.sender == owner, "Caller not authorized.");
+        _;
+    }
     
     constructor(string _name, string _cui, string _bornDate) public {
         name = _name;
         cui = _cui;
         bornDate = _bornDate;
+        owner = msg.sender;
+        emit identityCreatedEvent();
     }
     
     /// Only authorized addresses can call functions with this modifier.
@@ -43,5 +51,10 @@ contract Identity is Ownable {
 
     function isAuthorized(address _address) public view returns (bool) {
         return authorizedAccounts[_address];
+    }
+
+    /// Give authorization to a contract to an address.
+    function deauthorizeAccount(address _newAddress) public onlyOwner {
+        authorizedAccounts[_newAddress] = false;
     }
 }

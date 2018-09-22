@@ -1,18 +1,37 @@
 pragma solidity ^0.4.24;
 
-import "./Ownable.sol";
 import "./EducationToken.sol";
 
 contract SuperInstitution {
     string public name;
-    mapping (address => string) public tokenToName;
+    mapping (address => bool) public approvedCourses;
+    mapping (address => string) public institutions;
 
-    constructor(string _name) public {
-        name = _name;
+    EducationToken tokens; 
+    address owner;
+    modifier onlyOwner {
+        require(msg.sender == owner, "Caller not authorized.");
+        _;
     }
 
-    function createToken(string _name, string _description) public {
-        EducationToken createdToken = new EducationToken(_name, _description);
-        tokenToName[address(createdToken)] = _name;
+    modifier onlyAuthorized(course) {
+        require(approvedCourses[course], "Caller not authorized.");
+        _;
+    }
+    constructor(string _name) public {
+        name = _name;
+        tokens = new EducationToken("Reading1", "The student can produce the sound of the letters"); 
+        owner = msg.sender;
+    }
+
+     /// Registers an approved course 
+    function approveCourse(address course) public {
+        approvedCourses[course] = true;
+    }
+
+
+     /// Transfer a token from the student to 
+    function approveStudent(address course, address student) public onlyAuthorized(course) {
+        tokens.createToken(student);   
     }
 }

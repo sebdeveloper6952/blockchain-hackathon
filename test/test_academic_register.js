@@ -9,11 +9,17 @@ contract("AcademicRegister", function() {
         accounts = await web3.eth.accounts;
     });
 
-    it("AcademicRegister created successfully.", function () {
-        instance.getCurrentInstitution()
-        .then(function (institution) {
-            assert.equal(institution, web3.eth.accounts[0]);
+    it("Sets current institution.", function () {
+        instance.setCurrentInstitution(accounts[1])
+        .then(function () {
+            return instance.getCurrentInstitution();
+        }).then(function (institution, valid) {
+            assert.equal(institution, accounts[1], "Current institution.");
         });
     });
+
+    // it("Institution sets course...", function () {
+
+    // });
 
 });

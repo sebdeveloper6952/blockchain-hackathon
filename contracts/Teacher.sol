@@ -1,8 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "./Ownable.sol";
-
-contract Teacher is Ownable {
+contract Teacher {
     
     struct CourseInfo{
         address institution; 
@@ -11,6 +9,12 @@ contract Teacher is Ownable {
     }
     
     mapping(address => CourseInfo) private courses;
+    address private owner = msg.sender;
+
+    modifier onlyOwner {
+        require(msg.sender == owner, "Caller not authorized.");
+        _;
+    }
 
     /// Only the current Institution can call functions with this modifier.
     modifier ownerInstitution(address course) {

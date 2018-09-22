@@ -21,7 +21,7 @@ contract("Identity", function() {
 
     it("Contract initialized correctly.", function() {
         instance.getName().then(function (name) {
-            assert.equal(name, "sebas", "Identity name...");
+            assert.equal(name, "Persona 1", "Identity name...");
             return _instance.getCui();
         }).then(function (cui) {
             assert.equal(cui, "28310270921", "Identity cui...");
